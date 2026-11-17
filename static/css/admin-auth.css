@@ -1,0 +1,23 @@
+:root { font-family: system-ui, 'Noto Sans KR', sans-serif; color: #293b2d; background: #f7f6f2; color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.auth-shell { width: min(440px, calc(100% - 40px)); margin: 48px auto; }
+.back-link { color: #67765e; font-size: 14px; text-decoration: none; display: inline-block; padding: 12px 0; }
+.auth-card { background: #fffefa; border: 1px solid #dedfd4; border-radius: 18px; padding: 32px; margin-top: 16px; box-shadow: 0 12px 40px #2d3b2910; }
+.brand { font-family: Georgia, serif; font-size: 40px; letter-spacing: -2px; }
+.brand span { color: #cb7046; display: inline-block; margin-left: 5px; }
+.eyebrow { font-size: 10px; letter-spacing: 2px; color: #7d886f; margin: 28px 0 12px; }
+h1 { font-size: 26px; font-weight: 600; letter-spacing: -1px; margin: 0; }
+.intro { color: #77806e; font-size: 14px; line-height: 1.8; margin: 14px 0 24px; }
+label { display: block; margin: 20px 0 8px; font-size: 14px; font-weight: 600; }
+input { width: 100%; padding: 12px; border: 1px solid #cbd2c1; background: #fff; border-radius: 7px; font: inherit; min-height: 46px; color: inherit; }
+input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid #cb7046; outline-offset: 3px; }
+.field-help, .footnote { font-size: 12px; color: #78826e; line-height: 1.7; }
+.field-help { margin: 6px 0 0; }
+button { width: 100%; margin-top: 28px; border: 0; border-radius: 7px; padding: 14px; background: #344b38; color: #fff; font: inherit; cursor: pointer; min-height: 48px; }
+button span { margin-left: 10px; }
+button:hover { background: #486047; }
+.footnote { text-align: center; margin: 18px 0 0; }
+.error { padding: 12px; color: #98452f; background: #fbebe3; border-radius: 6px; font-size: 13px; line-height: 1.7; }
+.public-note { color: #79836f; text-align: center; font-size: 12px; line-height: 1.8; margin-top: 24px; }
+@media (max-width: 480px) { .auth-shell { margin: 20px auto; } .auth-card { padding: 26px 24px; } }

@@ -1,0 +1,275 @@
+.terms-progress {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+  padding: 0 0 23px;
+  margin: 0;
+  color: #8b947e;
+  font-size: 11px;
+}
+
+.terms-progress li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.terms-progress li[aria-current] {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.terms-progress li > span {
+  display: grid;
+  place-items: center;
+  height: 27px;
+  width: 27px;
+  border: 1px solid #dce2d1;
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.terms-progress li[aria-current] > span {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+.terms-layout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 26px;
+  align-items: stretch;
+}
+
+.terms-document {
+  background: #fcfcf8;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.terms-document-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 21px 25px;
+  border-bottom: 1px solid #e6e8dc;
+}
+
+.terms-document-heading h2 {
+  font-size: 17px;
+  font-weight: 550;
+  letter-spacing: -.4px;
+}
+
+.terms-body {
+  padding: 22px 25px;
+  height: 245px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #c5ceba transparent;
+  color: #727e66;
+  font-size: 12px;
+  line-height: 1.95;
+  word-break: keep-all;
+}
+
+.terms-body:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: -3px;
+}
+
+.terms-body h3 {
+  font-size: 13px;
+  font-weight: 550;
+  margin: 21px 0 8px;
+  color: #506344;
+}
+
+.terms-body section p + p {
+  margin-top: 9px;
+}
+
+.terms-draft {
+  border-left: 2px solid #c6d0b5;
+  padding-left: 12px;
+  font-size: 10px;
+  color: #8c967e;
+}
+
+.terms-consent {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 22px 25px;
+  border-top: 1px solid #e2e6d8;
+  background: #f0f3e9;
+  cursor: pointer;
+  min-height: 84px;
+}
+
+.terms-consent input {
+  width: 23px;
+  height: 23px;
+  margin: 0;
+  accent-color: var(--green);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.terms-consent b {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+.terms-required {
+  color: #7a8a65;
+  margin-right: 4px;
+}
+
+.terms-consent small {
+  display: block;
+  font-size: 10px;
+  margin-top: 4px;
+  color: #8b977c;
+}
+
+.terms-next {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 26px;
+  background: #edf1e5;
+  border: 1px solid #dfe5d4;
+  border-radius: 13px;
+}
+
+.terms-robot {
+  display: grid;
+  place-items: center;
+  height: 43px;
+  width: 43px;
+  border: 1px solid #ccd7bc;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  color: #70865a;
+}
+
+.terms-next .eyebrow {
+  font-size: 8px;
+  letter-spacing: 1.7px;
+}
+
+.terms-next h2 {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -.9px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+
+.terms-next > p {
+  color: #859375;
+  font-size: 11px;
+  line-height: 1.9;
+  margin-top: 12px;
+}
+
+.terms-next-hint {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 10px;
+  color: #768b62;
+  margin: 22px 0;
+}
+
+.terms-next-hint > span {
+  margin: 0 4px;
+  color: #9ba58c;
+}
+
+.terms-next-hint .icon {
+  height: 16px;
+  width: 16px;
+}
+
+.terms-next > .button {
+  margin-top: auto;
+}
+
+.terms-decline {
+  align-self: center;
+  min-height: 44px;
+  padding: 12px 8px 3px;
+  font-size: 10px;
+  color: #89967b;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 760px) {
+  .terms-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .terms-next > p br {
+    display: none;
+  }
+
+  .terms-next h2 br {
+    display: none;
+  }
+
+  .terms-next h2 {
+    font-size: 22px;
+  }
+
+  .terms-next > .button {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .terms-progress {
+    gap: 14px;
+    font-size: 9px;
+  }
+
+  .terms-progress li {
+    gap: 5px;
+  }
+
+  .terms-progress li > span {
+    width: 23px;
+    height: 23px;
+    font-size: 8px;
+  }
+
+  .terms-document-heading,
+  .terms-consent {
+    padding: 20px;
+  }
+
+  .terms-body {
+    padding: 20px;
+    font-size: 11px;
+  }
+
+  .terms-consent b {
+    font-size: 11px;
+  }
+
+  .terms-next {
+    padding: 23px;
+  }
+}

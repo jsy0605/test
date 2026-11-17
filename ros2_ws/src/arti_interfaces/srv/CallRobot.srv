@@ -1,0 +1,11 @@
+# Select one robot for this session. Do not move it until MoveToKiosk is requested.
+string session_id
+string mode
+string course_id
+string[] artwork_ids
+---
+bool accepted
+string robot_id
+# Absolute ROS namespace, e.g. /robot1 or /robot2.
+string robot_namespace
+string message

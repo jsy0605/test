@@ -1,0 +1,8 @@
+string session_id
+---
+bool success
+string visitor_id
+string message
+---
+float32 progress
+string message

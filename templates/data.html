@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Art I · 로봇 및 작품 관리</title>
+  <link rel="stylesheet" href="/static/css/data.css">
+  <script type="module" src="/static/js/manage.js"></script>
+</head>
+<body>
+  <main>
+    <nav><a href="/">← 키오스크로 돌아가기</a><div class="admin-nav"><a href="/sysmon">시스템 상태</a><a href="/data">새로고침</a><span>{{ current_admin.username }} 관리자</span><form method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="logout-button">로그아웃</button></form></div></nav>
+    <p class="eyebrow">ART I · LOCAL DATABASE</p>
+    <p class="server-environment">{{ '모의 신호 테스트 서버' if config.SIGNAL_SIMULATOR else '로봇 연동 서버' }} · {{ request.host }}</p>
+    <h1>로봇 및 작품 관리</h1>
+    <p>작품 DB(Art), 실시간 로봇 상태, 관람 로그 DB(Log)를 확인하고 작품 정보를 수정합니다.</p>
+    <section><h2>실시간 로봇 상태</h2><table><thead><tr><th>로봇</th><th>배터리</th><th>도크</th><th>이용 가능</th></tr></thead><tbody id="fleet-body"></tbody></table></section><script defer src="/static/js/fleet.js?v=2"></script>
+    <div class="stats"><div><b>{{ catalog.artworks | length }}</b>개 작품</div><div><b id="fleet-total">—</b>대 전체</div><div><b id="fleet-moving">—</b>대 주행 중</div><div><b id="fleet-available">—</b>대 이용 가능</div><div><b id="fleet-unavailable">—</b>대 이용 불가</div></div>
+    <details class="database-section" open>
+      <summary id="artworks-heading">작품 DB · Art <small>표에서 수정 후 행별 저장</small></summary>
+      <p>저장한 작품 정보는 DB에 보관되고 키오스크 표에 약 3초 이내에 반영됩니다. 작품 ID는 고정입니다.</p>
+      <div class="table-wrap"><table class="art-editor">
+        <thead><tr><th scope="col">artwork_id</th><th scope="col">artwork_title</th><th scope="col">artist</th><th scope="col">location</th><th scope="col">theme</th><th scope="col">description</th><th scope="col">x (m)</th><th scope="col">y (m)</th><th scope="col">저장</th></tr></thead>
+        <tbody>{% for art in catalog.artworks %}{% set form_id = 'art-row-' ~ art.artwork_index %}<tr data-art-index="{{ art.artwork_index }}">
+          <th scope="row"><code>{{ art.artwork_id }}</code></th>
+          <td><input form="{{ form_id }}" name="title_en" value="{{ art.title_en }}" aria-label="작품 {{ art.artwork_id }} 제목" required maxlength="200"></td>
+          <td><input form="{{ form_id }}" name="artist_name_en" value="{{ art.artist_name_en }}" aria-label="작품 {{ art.artwork_id }} 작가" required maxlength="200"></td>
+          <td><input form="{{ form_id }}" name="location" value="{{ art.location }}" aria-label="작품 {{ art.artwork_id }} 위치" required maxlength="64"></td>
+          <td><input form="{{ form_id }}" name="theme" value="{{ art.theme }}" aria-label="작품 {{ art.artwork_id }} 테마" required maxlength="200"></td>
+          <td><textarea form="{{ form_id }}" name="description" rows="2" aria-label="작품 {{ art.artwork_id }} 설명" required maxlength="10000">{{ art.description }}</textarea></td>
+          <td>{{ art.x_min }} ~ {{ art.x_max }}<br>대표 x <input form="{{ form_id }}" name="x" type="number" step="any" min="-1000000000000" max="1000000000000" value="{{ art.x if art.x is not none else '' }}" aria-label="작품 {{ art.artwork_id }} x 좌표"></td>
+          <td>{{ art.y_min }} ~ {{ art.y_max }}<br>대표 y <input form="{{ form_id }}" name="y" type="number" step="any" min="-1000000000000" max="1000000000000" value="{{ art.y if art.y is not none else '' }}" aria-label="작품 {{ art.artwork_id }} y 좌표"></td>
+          <td><form id="{{ form_id }}" class="artwork-row-form" data-index="{{ art.artwork_index }}"><button type="submit">저장</button><p class="save-message" role="status" aria-live="polite"></p></form></td>
+        </tr>{% endfor %}</tbody>
+      </table></div>
+      <p class="help">좌표를 모르면 빈칸으로 저장하세요. 표의 제목·작가를 저장하면 상세 화면의 제목·작가도 같은 내용으로 맞춥니다.</p>
+      <details class="advanced-artworks"><summary>이미지 확인·상세 작품 정보 수정</summary>
+      <div class="artworks">{% for art in catalog.artworks %}
+        <article><form class="artwork-form" data-index="{{ art.artwork_index }}" aria-label="작품 {{ art.artwork_index }} 정보">
+          <img class="managed-art-image" src="{{ art.image_path }}" alt="{{ art.image_alt or art.title }}" width="1536" height="1024" loading="lazy">
+          <h3>{{ art.artwork_code }} · {{ art.title }}</h3>
+          <p>작품 ID: <code>{{ art.artwork_id }}</code></p>
+          <label for="location-{{ art.artwork_index }}">작품 위치 코드 (location)</label>
+          <input id="location-{{ art.artwork_index }}" name="location" value="{{ art.location }}" required maxlength="64">
+          <label for="x-{{ art.artwork_index }}">작품 x 좌표 (m)</label>
+          <input id="x-{{ art.artwork_index }}" name="x" type="number" step="any" min="-1000000000000" max="1000000000000" value="{{ art.x if art.x is not none else '' }}">
+          <label for="y-{{ art.artwork_index }}">작품 y 좌표 (m)</label>
+          <input id="y-{{ art.artwork_index }}" name="y" type="number" step="any" min="-1000000000000" max="1000000000000" value="{{ art.y if art.y is not none else '' }}">
+          <label for="artist-{{ art.artwork_index }}">작가 이름 (상세 화면)</label>
+          <input id="artist-{{ art.artwork_index }}" name="artist_name" value="{{ art.artist_name }}" required maxlength="200">
+          <label for="artist-en-{{ art.artwork_index }}">표에 표시할 작가</label>
+          <input id="artist-en-{{ art.artwork_index }}" name="artist_name_en" value="{{ art.artist_name_en }}" maxlength="200">
+          <label for="theme-{{ art.artwork_index }}">작품 테마</label>
+          <input id="theme-{{ art.artwork_index }}" name="theme" value="{{ art.theme }}" required maxlength="200">
+          <label for="title-{{ art.artwork_index }}">작품 제목 (상세 화면)</label>
+          <input id="title-{{ art.artwork_index }}" name="title" value="{{ art.title }}" required maxlength="200">
+          <label for="title-en-{{ art.artwork_index }}">표에 표시할 작품 제목</label>
+          <input id="title-en-{{ art.artwork_index }}" name="title_en" value="{{ art.title_en }}" maxlength="200">
+          <label for="description-{{ art.artwork_index }}">작품 설명</label>
+          <textarea id="description-{{ art.artwork_index }}" name="description" required maxlength="10000" rows="5">{{ art.description }}</textarea>
+          <label for="alt-{{ art.artwork_index }}">그림 대체 설명</label>
+          <textarea id="alt-{{ art.artwork_index }}" name="image_alt" maxlength="500" rows="2">{{ art.image_alt }}</textarea>
+          <p class="image-path">이미지: <code>{{ art.image_path }}</code></p>
+          <button type="submit">작품 {{ art.artwork_index }} 저장</button>
+          <p class="save-message" role="status" aria-live="polite"></p>
+        </form></article>
+      {% endfor %}</div>
+      </details>
+    </details>
+    <details class="database-section" open>
+      <summary id="logs-heading">로그 DB · Log <small id="log-total">{{ total }}건</small></summary>
+      <p>로봇·중앙 서버가 HTTP로 보낸 로그를 저장합니다. 보낸 시간은 한국 시간(KST)으로 표시하고 1초마다 갱신합니다.</p>
+      <form id="log-filters" method="get" action="/data" class="log-filters">
+        <label class="search-field">검색어<input name="q" value="{{ logs.filters.q }}" maxlength="200" placeholder="로그 ID · 보낸 내용"></label>
+        <label>로봇 ID<input name="robot_id" value="{{ logs.filters.robot_id }}" maxlength="64" placeholder="전체 로봇 / 예: tb1"></label>
+        <label>보낸 날짜<input type="date" name="date" value="{{ logs.filters.date }}"></label>
+        <input type="hidden" name="limit" value="{{ logs.limit }}"><button type="submit">검색</button><button type="button" class="secondary" id="reset-log-filters">검색 조건 초기화</button>
+      </form>
+      <p id="log-message" role="status" aria-live="polite">수신 로그 {{ total }}건</p>
+      <div class="table-wrap"><table class="log-table robot-log-table">
+        <thead><tr><th scope="col">로그 ID</th><th scope="col">로그 보낸 ID</th><th scope="col">보낸 시간</th><th scope="col">보낸 내용</th></tr></thead>
+        <tbody id="log-rows">{% for entry in logs.logs %}<tr>
+          <td>{{ entry.log_id }}</td><td>{{ entry.robot_id }}</td><td>{{ entry.sent_at | localtime }}</td><td>{{ entry.message }}</td>
+        </tr>{% else %}<tr><td colspan="4" class="empty">조건에 맞는 수신 로그가 없습니다.</td></tr>{% endfor %}</tbody>
+      </table></div>
+      <div class="log-pagination"><button type="button" id="log-previous" class="secondary" {{ 'disabled' if logs.offset == 0 else '' }}>이전</button><span id="log-range">{{ logs.offset + 1 if logs.logs else 0 }}–{{ logs.offset + logs.logs | length if logs.logs else 0 }} / {{ total }}</span><button type="button" id="log-next" class="secondary" {{ 'disabled' if not logs.has_more else '' }}>다음</button><button type="button" id="refresh-logs" class="secondary">새로 조회</button></div>
+      <div class="log-reset-actions"><button type="button" id="open-log-reset" class="danger-button">DB 로그 초기화</button><span>수신한 로봇 로그 전체를 삭제합니다.</span></div>
+      <p id="log-reset-result" role="status" aria-live="polite"></p>
+      <div id="log-page-state" data-offset="{{ logs.offset }}" data-limit="{{ logs.limit }}" data-total="{{ total }}"></div>
+    </details>
+    <dialog id="log-reset-dialog" aria-labelledby="log-reset-heading" aria-describedby="log-reset-description">
+      <form id="log-reset-form">
+        <h2 id="log-reset-heading">DB 로봇 로그를 초기화할까요?</h2>
+        <p id="log-reset-description">전체 로그 건수를 확인하고 있습니다…</p>
+        <p>삭제한 로봇 로그는 되돌릴 수 없습니다. 작품 정보·로봇 위치·관리자 계정은 유지됩니다.</p>
+        <p id="log-reset-message" role="status" aria-live="polite"></p>
+        <div class="form-actions"><button type="button" class="secondary" id="cancel-log-reset">취소</button><button type="submit" class="danger-button" id="confirm-log-reset" disabled>전체 기록 삭제</button></div>
+      </form>
+    </dialog>
+  </main>
+</body>
+</html>

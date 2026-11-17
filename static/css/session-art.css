@@ -1,0 +1,42 @@
+.session-robot-panel {
+  justify-content: center;
+  padding: 18px 18px 26px;
+  background: #ecefe3;
+}
+
+.session-robot-image {
+  display: block;
+  width: 100%;
+  height: 330px;
+  object-fit: contain;
+}
+
+.session-robot-panel .robot-name {
+  margin-top: 8px;
+}
+
+@media (max-width: 760px) {
+  .session-robot-image { height: 280px; }
+}
+
+@media (max-width: 480px) {
+  .session-robot-panel { padding: 12px 18px 22px; }
+  .session-robot-image { height: 260px; }
+}
+
+.hero-art--arti .hero-arti-image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.12);
+}
+
+.hero-art--arti .hero-art-label {
+  z-index: 2;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}

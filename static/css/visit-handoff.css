@@ -1,0 +1,10 @@
+.main.page-farewell { max-width: none; min-height: 100dvh; padding: 48px 24px; display: grid; place-items: center; }
+.farewell-content { text-align: center; width: min(100%, 900px); }
+.farewell-flower { font-size: clamp(72px, 12vw, 120px); line-height: 1; color: #8c9b72; margin-bottom: 34px; }
+.farewell-content h1 { font-size: clamp(32px, 5.5vw, 72px); font-weight: 500; letter-spacing: -2px; line-height: 1.5; word-break: keep-all; }
+.farewell-content p { margin-top: 22px; font-size: 15px; color: #8b947e; }
+.farewell-content .button { margin-top: 42px; min-width: 190px; min-height: 58px; justify-content: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .farewell-content { animation: farewell-appear .4s ease-out; }
+  @keyframes farewell-appear { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+}

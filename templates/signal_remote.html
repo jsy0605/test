@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Art I 신호 리모컨</title><link rel="stylesheet" href="/static/css/signal-remote.css"><script type="module" src="/static/js/signal-remote.js"></script></head>
+<body><main>
+<nav><b><span class="led"></span> ART I · SIGNAL REMOTE</b><a href="/" target="_blank" rel="noopener">키오스크 열기 ↗</a></nav>
+<header><div><p class="eyebrow">FREE SIGNAL TEST</p><h1>누르면, 바로 수신.</h1><p>순서 없이 원하는 상황을 보내세요. 도착부터, 오류부터, 작품 3번부터 시작해도 돼요.</p></div><span class="count">{{count}}<small>개 신호</small></span></header>
+<section class="controls">
+<label>대상 관람<select id="session"><option value="">자동 · 최근 관람 / 없으면 새로 생성</option></select></label>
+<label>로봇<select id="robot"><option value="robot1">Arty 1</option><option value="robot2">Arty 2</option></select></label>
+<button id="new-session" class="secondary">새 테스트 만들기 ＋</button>
+</section>
+<details><summary>전송할 문구·진행률 직접 지정</summary><div class="payload"><label>화면에 표시할 문구 (비워두면 버튼 이름)<input id="custom-message" maxlength="500" placeholder="예: 관람객이 멀어져 아티가 기다리고 있어요"></label><label>진행률 <output id="progress-value">50%</output><input id="progress" type="range" min="0" max="100" value="50"></label></div></details>
+<div class="feedback"><span id="status">상태 연결 중…</span><p id="message" role="status" aria-live="polite">버튼을 누르면 테스트 키오스크에 바로 반영돼요.</p></div>
+<div class="toolbar"><h2>보낼 신호 <small>모든 버튼은 독립적으로 동작해요</small></h2><label class="search-label"><span class="sr-only">신호 검색</span><input id="search" type="search" placeholder="신호 검색…"></label></div>
+<div class="groups">{% for id,title,buttons in groups %}<section class="group" data-group="{{id}}"><h2><span>{{'%02d'|format(loop.index)}}</span>{{title}}</h2><div class="buttons">{% for code,label in buttons %}<button data-signal="{{code}}"><span>{{label}}</span><small>{{code}}</small></button>{% endfor %}</div></section>{% endfor %}</div>
+<section class="log"><h2>전송 기록 <small>최근 80개 · 최신순</small></h2><ol id="history"></ol></section>
+<footer>화면 점검용 모의 신호 · 별도 테스트 DB 사용 · 실제 로봇 연결 없음<br>관람·도킹·오류 버튼은 예상 상황을 재현하며, 실제 ROS 규격이 확정되면 대응 연결이 필요해요.</footer>
+</main></body></html>

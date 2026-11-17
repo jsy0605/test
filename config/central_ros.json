@@ -1,0 +1,15 @@
+{
+  "ros_domain_id": 1,
+  "discovery_server_ip": "192.168.107.42",
+  "discovery_server_id": 0,
+  "discovery_server_port": 11811,
+  "additional_discovery_servers": [
+    {
+      "name": "tb1",
+      "ip": "192.168.107.101",
+      "server_id": null,
+      "port": 11811,
+      "enabled": false
+    }
+  ]
+}

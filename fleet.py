@@ -1,0 +1,41 @@
+import json
+import threading
+import time
+from pathlib import Path
+
+
+class Fleet:
+    def __init__(self):
+        self.names = json.loads((Path(__file__).parent / "config/fleet.json").read_text())
+        self.values = {name: {} for name in self.names}
+        self.lock = threading.Lock()
+
+    def receive(self, name, field, value):
+        with self.lock:
+            self.values[name][field] = (time.monotonic(), value)
+
+    def snapshot(self):
+        with self.lock:
+            now = time.monotonic()
+            rows = {}
+            for name, fields in self.values.items():
+                row = {key: value if now - stamp <= (3 if key == "moving" else 15) else None
+                       for key, (stamp, value) in fields.items()}
+                row["available"] = row.get("dock") is True and (row.get("battery") or 0) > 30
+                rows[name] = row
+            return rows
+
+    def subscribe(self, node, qos):
+        from sensor_msgs.msg import BatteryState
+        from irobot_create_msgs.msg import DockStatus
+        from nav_msgs.msg import Odometry
+        from math import hypot
+        for name, namespace in self.names.items():
+            node.create_subscription(BatteryState, namespace + "/battery_state",
+                lambda msg, n=name: self.receive(n, "battery", round(msg.percentage * 100, 5)
+                    if 0 <= msg.percentage <= 1 else None), qos)
+            node.create_subscription(DockStatus, namespace + "/dock_status",
+                lambda msg, n=name: self.receive(n, "dock", msg.is_docked), qos)
+            node.create_subscription(Odometry, namespace + "/odom",
+                lambda msg, n=name: self.receive(n, "moving",
+                    hypot(msg.twist.twist.linear.x, msg.twist.twist.linear.y) > 0.01 or abs(msg.twist.twist.angular.z) > 0.01), qos)

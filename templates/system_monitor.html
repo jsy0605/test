@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Art I · 시스템 상태</title>
+  <link rel="icon" href="/static/art/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/css/system-monitor.css">
+  <script type="module" src="/static/js/system-monitor.js"></script>
+</head>
+<body>
+  <main>
+    <nav aria-label="관리자 메뉴"><a class="brand" href="/">Art I<span>✳</span></a><div class="nav-links"><a href="/data">로봇·작품 관리</a><span>{{ current_admin.username }} 관리자</span><form method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">로그아웃</button></form></div></nav>
+    <header class="page-heading"><div><p class="eyebrow">SYSTEM MONITOR</p><h1>시스템 상태</h1><p>Flask 웹서버가 실행되는 기기의 사용량을 확인합니다.</p></div><div class="live-panel"><span id="connection-state" class="connection" role="status">측정값을 불러오는 중…</span><span id="updated-at">2초마다 자동 갱신</span></div></header>
+    <div class="notice" id="error-notice" role="alert" hidden><span id="error-text"></span><a id="login-again" href="/login" hidden>관리자 로그인 →</a></div>
+    <section class="target-banner" aria-label="측정 대상"><span class="target-symbol" aria-hidden="true">◉</span><div><small>측정 기기</small><strong id="host-name">—</strong></div><p>Flask가 실행되는 기기에서 직접 측정합니다.<br>키오스크로 옮겨 실행하면 그 기기의 상태가 표시됩니다.</p></section>
+    <section class="metrics" aria-label="실시간 자원 사용량">
+      <article class="metric-card cpu"><div class="metric-heading"><h2>CPU</h2><span class="metric-badge" id="cpu-badge">수신 대기</span></div><p class="metric-value"><strong id="cpu-value">—</strong><span>%</span></p><div class="meter" id="cpu-meter" role="progressbar" aria-label="CPU 사용률" aria-valuemin="0" aria-valuemax="100"><i></i></div><p class="metric-detail" id="cpu-detail">프로세서 사용률을 측정합니다.</p></article>
+      <article class="metric-card memory"><div class="metric-heading"><h2>메모리 <span>RAM</span></h2><span class="metric-badge" id="memory-badge">수신 대기</span></div><p class="metric-value"><strong id="memory-value">—</strong><span>%</span></p><div class="meter" id="memory-meter" role="progressbar" aria-label="메모리 사용률" aria-valuemin="0" aria-valuemax="100"><i></i></div><p class="metric-detail" id="memory-detail">사용 중인 메모리를 측정합니다.</p></article>
+      <article class="metric-card disk"><div class="metric-heading"><h2>디스크</h2><span class="metric-badge" id="disk-badge">수신 대기</span></div><p class="metric-value"><strong id="disk-value">—</strong><span>%</span></p><div class="meter" id="disk-meter" role="progressbar" aria-label="디스크 사용률" aria-valuemin="0" aria-valuemax="100"><i></i></div><p class="metric-detail" id="disk-detail">DB가 저장되는 드라이브를 측정합니다.</p></article>
+    </section>
+    <section class="trend-panel" aria-labelledby="trend-heading"><div class="panel-heading"><div><h2 id="trend-heading">최근 사용량</h2><p id="chart-caption">측정값이 들어오면 그래프가 표시됩니다.</p></div><div class="legend"><span class="cpu">CPU</span><span class="memory">메모리</span><span class="disk">디스크</span></div></div>
+      <div class="chart-wrap"><svg id="usage-chart" viewBox="0 0 900 210" role="img" aria-label="CPU, 메모리, 디스크의 사용률 추이"><g class="chart-grid"><path d="M40 15H885M40 95H885M40 175H885"/><text x="4" y="20">100%</text><text x="11" y="100">50%</text><text x="19" y="180">0%</text></g><g id="chart-series"></g></svg><p id="chart-empty" class="chart-empty">실제 측정값을 기다리고 있어요.</p></div><div class="chart-times"><span id="chart-from">—</span><span id="chart-to">—</span></div>
+    </section>
+    <section class="server-panel" aria-labelledby="server-heading"><div><p class="eyebrow">WEB SERVER</p><h2 id="server-heading">실행 정보</h2><p>서버 실행 시간은 Flask를 다시 시작하면 초기화됩니다.</p></div><dl><div><dt>웹서버 상태</dt><dd id="server-status">확인 중</dd></div><div><dt>웹서버 실행 시간</dt><dd id="server-uptime">—</dd></div><div><dt>기기 가동 시간</dt><dd id="host-uptime">—</dd></div><div><dt>운영체제</dt><dd id="host-os">—</dd></div></dl></section>
+    <footer>실시간 측정 · 최근 그래프는 이 페이지에서만 유지됩니다. <span>ART I · ADMINISTRATION</span></footer>
+  </main>
+</body>
+</html>
