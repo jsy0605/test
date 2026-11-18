@@ -1,3 +1,6 @@
+# 로봇별 네임스페이스의 배터리, 도크, odom 토픽을 구독한다.
+# 콜백에 로봇 이름을 고정해 두 로봇의 수신값을 구분한다.
+
 import json
 import threading
 import time
@@ -19,6 +22,8 @@ class Fleet:
             now = time.monotonic()
             rows = {}
             for name, fields in self.values.items():
+                # 리뷰: 도킹 해제 메시지를 놓치면 마지막 도킹 수신 후 최대 15초 동안
+                # 호출 가능으로 보일 수 있다. 운영에서 허용할 수 있는 지연인지 확인이 필요하다.
                 row = {key: value if now - stamp <= (3 if key == "moving" else 15) else None
                        for key, (stamp, value) in fields.items()}
                 row["available"] = row.get("dock") is True and (row.get("battery") or 0) > 30

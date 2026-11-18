@@ -37,6 +37,8 @@ class RobotAvailability:
 
     def snapshot(self):
         with self._lock:
+            # 리뷰: 로봇 상태를 한 번도 받지 않아도 unavailable을 반환한다.
+            # 기존 테스트가 기대하는 waiting을 호출 불가와 구분할지 확인이 필요하다.
             value = any(row["available"] for row in self.fleet.snapshot().values())
             status = "disconnected" if self._failed else ("available" if value else "unavailable")
             return {
@@ -49,6 +51,8 @@ class RobotAvailability:
 
     def toggle_dev(self):
         with self._lock:
+            # 리뷰: _ros_ready가 True로 설정되지 않아 개발용 토글 요청은 503을 반환한다.
+            # Fleet 전환 후에도 이 기능을 유지할지 확인이 필요하다.
             if not self._ros_ready:
                 raise RuntimeError("ROS 2 연결을 준비하고 있어요. 잠시 후 다시 시도해 주세요.")
             current = self._dev_value
